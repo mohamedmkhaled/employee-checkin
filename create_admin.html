@@ -40,7 +40,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="password"], input[type="email"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -65,19 +65,11 @@
     <script>
         function createAdmin() {
             const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = Math.random().toString(36).substring(2, 10); // Generate a random password
+            const password = document.getElementById('password').value;
             const admins = JSON.parse(localStorage.getItem('admins')) || [];
-            admins.push({ username, email, password });
+            admins.push({ username, password });
             localStorage.setItem('admins', JSON.stringify(admins));
-            alert('Admin user created. An email will be sent with the credentials.');
-            sendEmail(email, password);
-        }
-
-        function sendEmail(email, password) {
-            // This function will need to use an email sending service like EmailJS or similar
-            // For the purpose of this example, we'll just log the email content
-            console.log(`Sending email to ${email} with password ${password}`);
+            alert('Admin user created.');
         }
     </script>
 </head>
@@ -90,8 +82,8 @@
             <input type="text" id="username">
         </div>
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email">
+            <label for="password">Password:</label>
+            <input type="password" id="password">
         </div>
         <input type="button" value="Create Admin" onclick="createAdmin()">
     </div>
