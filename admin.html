@@ -20,7 +20,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
             text-align: center;
         }
         .logo {
@@ -74,6 +74,30 @@
         th {
             background-color: #f4f4f4;
         }
+        .actions {
+            display: flex;
+            justify-content: space-around;
+        }
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn {
+            background-color: #FFA500;
+            color: white;
+        }
+        .edit-btn:hover {
+            background-color: #FF8C00;
+        }
+        .delete-btn {
+            background-color: #FF6347;
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #FF4500;
+        }
     </style>
     <script>
         let users = JSON.parse(localStorage.getItem('users')) || [
@@ -93,9 +117,9 @@
                     <tr>
                         <td>${user.username}</td>
                         <td>${user.password}</td>
-                        <td>
-                            <button onclick="editUser(${index})">Edit</button>
-                            <button onclick="deleteUser(${index})">Delete</button>
+                        <td class="actions">
+                            <button class="edit-btn" onclick="editUser(${index})">Edit</button>
+                            <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
                         </td>
                     </tr>
                 `;
