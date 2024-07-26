@@ -118,16 +118,20 @@
             } else {
                 document.getElementById("location-error").style.display = "none";
             }
+
+            // Submit the form to Google Forms
             var form = event.target;
             var data = new FormData(form);
             var xhr = new XMLHttpRequest();
             xhr.open("POST", form.action);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    console.log('Submission successful');
-                    window.location.href = "thank_you.html"; // Redirect to a thank you page
-                } else {
-                    alert("An error occurred. Please try again.");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log('Submission successful');
+                        window.location.href = "thank_you.html"; // Redirect to a thank you page
+                    } else {
+                        alert("An error occurred. Please try again.");
+                    }
                 }
             };
             xhr.send(data);
