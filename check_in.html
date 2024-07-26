@@ -103,7 +103,14 @@
         }
 
         function validateForm() {
+            var name = document.getElementById("name").value;
             var location = document.getElementById("location").value;
+            if (name === "") {
+                document.getElementById("name-error").style.display = "block";
+                return false;
+            } else {
+                document.getElementById("name-error").style.display = "none";
+            }
             if (location === "" || location === "Geolocation is not supported by this browser.") {
                 document.getElementById("location-error").style.display = "block";
                 return false;
@@ -144,6 +151,7 @@
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="entry.662451888" readonly required>
+                <span id="name-error" class="error">Please select your name.</span>
             </div>
             <div class="form-group">
                 <label for="check">Check-in/Check-out:</label>
