@@ -57,6 +57,7 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         input[type="button"]:hover {
             background-color: #45a049;
@@ -87,6 +88,7 @@
         .edit-btn {
             background-color: #FFA500;
             color: white;
+            transition: background-color 0.3s ease;
         }
         .edit-btn:hover {
             background-color: #FF8C00;
@@ -94,9 +96,27 @@
         .delete-btn {
             background-color: #FF6347;
             color: white;
+            transition: background-color 0.3s ease;
         }
         .delete-btn:hover {
             background-color: #FF4500;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .nav-buttons button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .nav-buttons button:hover {
+            background-color: #0056b3;
         }
     </style>
     <script>
@@ -127,6 +147,10 @@
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
             if (username && password) {
+                if (admins.some(admin => admin.username === username)) {
+                    alert('Username already exists. Please choose a different username.');
+                    return;
+                }
                 admins.push({ username, password });
                 saveAdmins();
                 displayAdmins();
@@ -141,6 +165,10 @@
             const newUsername = prompt('Enter new username:', admins[index].username);
             const newPassword = prompt('Enter new password:', admins[index].password);
             if (newUsername && newPassword) {
+                if (admins.some((admin, i) => admin.username === newUsername && i !== index)) {
+                    alert('Username already exists. Please choose a different username.');
+                    return;
+                }
                 admins[index].username = newUsername;
                 admins[index].password = newPassword;
                 saveAdmins();
@@ -163,6 +191,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="nav-buttons">
+            <button onclick="window.location.href='admin_login.html'">Admin Login</button>
+            <button onclick="window.location.href='index.html'">Employee Login</button>
+        </div>
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Create Admin User</h2>
         <div class="form-group">
