@@ -120,15 +120,24 @@
             return true;
         }
 
-        function handleIframeLoad() {
-            if (submitted) {
-                window.location.href = "thank_you.html";
+        function handleSubmit(event) {
+            event.preventDefault();
+            if (validateForm()) {
+                var form = document.querySelector("form");
+                var data = new FormData(form);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", form.action);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            window.location.href = "thank_you.html";
+                        } else {
+                            alert("An error occurred. Please try again.");
+                        }
+                    }
+                };
+                xhr.send(data);
             }
-        }
-
-        var submitted = false;
-        function handleSubmit() {
-            submitted = true;
         }
 
         function checkLogin() {
@@ -150,7 +159,7 @@
     <div class="container">
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Employee Check-In</h2>
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST" target="hidden_iframe" onsubmit="return validateForm(); handleSubmit();">
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST" onsubmit="handleSubmit(event)">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="entry.662451888" readonly required>
@@ -169,7 +178,6 @@
             </div>
             <input type="submit" value="Submit">
         </form>
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="handleIframeLoad();"></iframe>
     </div>
 </body>
 </html>
