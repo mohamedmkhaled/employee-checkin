@@ -215,13 +215,18 @@
             checkAdminLogin();
             displayUsers();
             sessionTimeout();
+
+            // Invalidate session on tab close or refresh
+            window.addEventListener('beforeunload', function() {
+                sessionStorage.removeItem('loggedInAdmin');
+            });
         }
     </script>
 </head>
 <body>
     <div class="container">
         <div class="nav-buttons">
-            <button onclick="window.location.href='admin_login.html'">Admin Login</button>
+            <button onclick="logout()">Admin Logout</button>
             <button onclick="window.location.href='index.html'">Employee Login</button>
         </div>
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
