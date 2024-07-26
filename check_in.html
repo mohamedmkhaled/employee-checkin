@@ -7,63 +7,63 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0.
-            display: flex.
-            justify-content: center.
-            align-items: center.
-            height: 100vh.
-            background-color: #f0f2f5.
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
         }
         .container {
-            background-color: white.
-            padding: 20px.
-            border-radius: 8px.
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1).
-            width: 100%.
-            max-width: 400px.
-            text-align: center.
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
         }
         .logo {
-            width: 100px.
-            margin-bottom: 20px.
+            width: 100px;
+            margin-bottom: 20px;
         }
         h2 {
-            margin-top: 0.
-            color: #333.
+            margin-top: 0;
+            color: #333;
         }
         .form-group {
-            margin-bottom: 15px.
-            text-align: left.
+            margin-bottom: 15px;
+            text-align: left;
         }
         label {
-            display: block.
-            margin-bottom: 5px.
-            font-weight: bold.
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
         input[type="text"], select {
-            width: 100%.
-            padding: 10px.
-            box-sizing: border-box.
-            border: 1px solid #ccc.
-            border-radius: 4px.
-            margin-bottom: 10px.
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
         }
         input[type="submit"] {
-            width: 100%.
-            padding: 10px.
-            background-color: #4CAF50.
-            border: none.
-            border-radius: 4px.
-            color: white.
-            font-size: 16px.
-            cursor: pointer.
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #45a049.
+            background-color: #45a049;
         }
         .error {
-            color: red.
-            display: none.
+            color: red;
+            display: none;
         }
     </style>
     <script>
@@ -103,14 +103,7 @@
         }
 
         function validateForm() {
-            var name = document.getElementById("name").value;
             var location = document.getElementById("location").value;
-            if (name === "") {
-                document.getElementById("name-error").style.display = "block";
-                return false;
-            } else {
-                document.getElementById("name-error").style.display = "none";
-            }
             if (location === "" || location === "Geolocation is not supported by this browser.") {
                 document.getElementById("location-error").style.display = "block";
                 return false;
@@ -150,18 +143,7 @@
         <form action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST" target="hidden_iframe" onsubmit="handleSubmit()">
             <div class="form-group">
                 <label for="name">Name:</label>
-                <select id="name" name="entry.662451888" required>
-                    <option value="">Select your name</option>
-                    <option value="Sayed Eid">Sayed Eid</option>
-                    <option value="Mina Ayman">Mina Ayman</option>
-                    <option value="Hossam Bayoumi">Hossam Bayoumi</option>
-                    <option value="Habib">Habib</option>
-                    <option value="Mohamed Eid">Mohamed Eid</option>
-                    <option value="SalahAldin">SalahAldin</option>
-                    <option value="Mayar Hussein">Mayar Hussein</option>
-                    <option value="Asmaa Mohamed">Asmaa Mohamed</option>
-                </select>
-                <span id="name-error" class="error">Please select your name.</span>
+                <input type="text" id="name" name="entry.662451888" readonly required>
             </div>
             <div class="form-group">
                 <label for="check">Check-in/Check-out:</label>
