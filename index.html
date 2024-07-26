@@ -102,8 +102,7 @@
             document.getElementById("location-error").style.display = "block";
         }
 
-        function handleSubmit(event) {
-            event.preventDefault();
+        function validateForm() {
             var name = document.getElementById("name").value;
             var location = document.getElementById("location").value;
             if (name === "") {
@@ -118,23 +117,7 @@
             } else {
                 document.getElementById("location-error").style.display = "none";
             }
-
-            // Submit the form to Google Forms
-            var form = event.target;
-            var data = new FormData(form);
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", form.action);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log('Submission successful');
-                        window.location.href = "thank_you.html"; // Redirect to a thank you page
-                    } else {
-                        alert("An error occurred. Please try again.");
-                    }
-                }
-            };
-            xhr.send(data);
+            return true;
         }
     </script>
 </head>
@@ -142,7 +125,7 @@
     <div class="container">
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Employee Check-In</h2>
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST" onsubmit="handleSubmit(event)">
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST" target="hidden_iframe" onsubmit="return validateForm();">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <select id="name" name="entry.662451888" required>
@@ -172,6 +155,14 @@
             </div>
             <input type="submit" value="Submit">
         </form>
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { window.location.href = 'thank_you.html'; }"></iframe>
     </div>
+    <script>
+        var submitted = false;
+        function handleSubmit() {
+            submitted = true;
+        }
+        document.querySelector("form").addEventListener("submit", handleSubmit);
+    </script>
 </body>
 </html>
