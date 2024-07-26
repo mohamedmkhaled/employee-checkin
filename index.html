@@ -61,11 +61,16 @@
         input[type="button"]:hover {
             background-color: #45a049;
         }
+        .error {
+            color: red;
+            display: none;
+        }
     </style>
     <script>
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const users = JSON.parse(localStorage.getItem('users')) || [];
             const user = users.find(user => user.username === username && user.password === password);
             if (user) {
                 sessionStorage.setItem('loggedInUser', username);
@@ -90,7 +95,7 @@
             <input type="password" id="password">
         </div>
         <input type="button" value="Login" onclick="login()">
-        <div id="error" style="color: red; display: none;">Invalid username or password</div>
+        <div id="error" class="error">Invalid username or password</div>
     </div>
 </body>
 </html>
