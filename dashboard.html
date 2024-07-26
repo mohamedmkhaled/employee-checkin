@@ -7,43 +7,43 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f2f5;
+            padding: 0.
+            display: flex.
+            justify-content: center.
+            align-items: center.
+            height: 100vh.
+            background-color: #f0f2f5.
         }
         .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
+            background-color: white.
+            padding: 20px.
+            border-radius: 8px.
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1).
+            width: 100%.
+            max-width: 400px.
+            text-align: center.
         }
         .logo {
-            width: 100px;
-            margin-bottom: 20px;
+            width: 100px.
+            margin-bottom: 20px.
         }
         h2 {
-            margin-top: 0;
-            color: #333;
+            margin-top: 0.
+            color: #333.
         }
         input[type="button"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            margin-bottom: 10px;
+            width: 100%.
+            padding: 10px.
+            background-color: #4CAF50.
+            border: none.
+            border-radius: 4px.
+            color: white.
+            font-size: 16px.
+            cursor: pointer.
+            margin-bottom: 10px.
         }
         input[type="button"]:hover {
-            background-color: #45a049;
+            background-color: #45a049.
         }
     </style>
     <script>
@@ -55,6 +55,8 @@
             const user = sessionStorage.getItem('loggedInUser');
             if (!user) {
                 window.location.href = 'index.html';
+            } else {
+                document.getElementById('username').innerText = user;
             }
         }
 
@@ -68,8 +70,5 @@
         <input type="button" value="Check-In" onclick="redirectTo('check_in.html')">
         <input type="button" value="Check-Out" onclick="redirectTo('check_out.html')">
     </div>
-    <script>
-        document.getElementById('username').innerText = sessionStorage.getItem('loggedInUser');
-    </script>
 </body>
 </html>
