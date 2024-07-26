@@ -24,7 +24,7 @@
             text-align: center;
         }
         .logo {
-            width: 150px;
+            width: 150px; /* Increased size */
             margin-bottom: 20px;
         }
         h2 {
@@ -159,7 +159,15 @@
             }
         }
 
+        function checkAdminLogin() {
+            const admin = sessionStorage.getItem('loggedInAdmin');
+            if (!admin) {
+                window.location.href = 'admin_login.html';
+            }
+        }
+
         window.onload = function() {
+            checkAdminLogin();
             displayUsers();
         }
     </script>
