@@ -31,33 +31,33 @@
             margin-top: 0;
             color: #333;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .btn-container {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        th, td {
+        .btn {
+            width: 100%;
             padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .upload-btn, .leave-btn {
-            padding: 5px 10px;
+            margin-bottom: 10px;
             border: none;
             border-radius: 4px;
             color: white;
+            font-size: 16px;
             cursor: pointer;
-            margin-bottom: 10px;
-            width: 100%;
         }
-        .upload-btn {
+        .check-in {
             background-color: #4CAF50;
         }
-        .upload-btn:hover {
+        .check-in:hover {
             background-color: #45a049;
+        }
+        .check-out {
+            background-color: #007BFF;
+        }
+        .check-out:hover {
+            background-color: #0056b3;
         }
         .sick-leave {
             background-color: #FFA500;
@@ -77,12 +77,43 @@
         .vacation:hover {
             background-color: #1C86EE;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .upload-btn {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Employee Dashboard</h2>
+        <div class="btn-container">
+            <button class="btn check-in" onclick="location.href='check_in.html'">Check In</button>
+            <button class="btn check-out" onclick="location.href='check_out.html'">Check Out</button>
+            <button class="btn sick-leave" onclick="location.href='sick_leave.html'">Sick Leave</button>
+            <button class="btn emergency-leave" onclick="location.href='emergency_leave.html'">Emergency Leave</button>
+            <button class="btn vacation" onclick="location.href='vacation.html'">Vacation</button>
+        </div>
         <h3>Leave Records</h3>
         <table id="leaveTable">
             <tr>
@@ -92,9 +123,6 @@
                 <th>Upload Document</th>
             </tr>
         </table>
-        <button class="leave-btn sick-leave" onclick="location.href='sick_leave.html'">Sick Leave</button>
-        <button class="leave-btn emergency-leave" onclick="location.href='emergency_leave.html'">Emergency Leave</button>
-        <button class="leave-btn vacation" onclick="location.href='vacation.html'">Vacation</button>
         <script>
             async function fetchLeaves() {
                 const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL');
