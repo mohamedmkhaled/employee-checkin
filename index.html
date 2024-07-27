@@ -24,7 +24,7 @@
             text-align: center;
         }
         .logo {
-            width: 100px;
+            width: 150px;
             margin-bottom: 20px;
         }
         h2 {
@@ -70,42 +70,43 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-  apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
-  authDomain: "attendance-24135.firebaseapp.com",
-  projectId: "attendance-24135",
-  storageBucket: "attendance-24135.appspot.com",
-  messagingSenderId: "296971423576",
-  appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
-  measurementId: "G-W6WMML8PDP"
-  };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
+            authDomain: "attendance-24135.firebaseapp.com",
+            projectId: "attendance-24135",
+            storageBucket: "attendance-24135.appspot.com",
+            messagingSenderId: "296971423576",
+            appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
+            measurementId: "G-W6WMML8PDP"
+        };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-      function login() {
-          const username = document.getElementById('username').value;
-          const password = document.getElementById('password').value;
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-          auth.signInWithEmailAndPassword(username, password)
-              .then((userCredential) => {
-                  sessionStorage.setItem('loggedInUser', username);
-                  document.getElementById('error').style.display = 'none';
-                  window.location.href = 'dashboard.html';
-              })
-              .catch((error) => {
-                  document.getElementById('error').style.display = 'block';
-              });
-      }
+            auth.signInWithEmailAndPassword(username, password)
+                .then((userCredential) => {
+                    // Signed in
+                    sessionStorage.setItem('loggedInUser', username);
+                    document.getElementById('error').style.display = 'none';
+                    window.location.href = 'dashboard.html';
+                })
+                .catch((error) => {
+                    document.getElementById('error').style.display = 'block';
+                });
+        }
     </script>
 </head>
 <body>
     <div class="container">
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
-        <h2>Login</h2>
+        <h2>Employee Login</h2>
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username">
