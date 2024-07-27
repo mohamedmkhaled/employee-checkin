@@ -81,13 +81,17 @@
         <form id="checkinForm" action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST">
             <div class="form-group">
                 <label for="name">Name:</label>
-                <input type="text" id="name" name="entry.662451888" required>
+                <input type="text" id="name" name="entry.662451888" required readonly>
             </div>
             <div class="form-group">
                 <label for="reason">Reason:</label>
                 <textarea id="reason" name="entry.1234567890" rows="4" required></textarea>
             </div>
-            <input type="hidden" id="check" name="entry.988086970">
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="entry.1727974634" readonly required>
+            </div>
+            <input type="hidden" id="check" name="entry.988086970" value="Sick Leave">
             <input type="button" value="Submit Sick Leave" onclick="submitForm()">
         </form>
     </div>
