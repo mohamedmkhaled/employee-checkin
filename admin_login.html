@@ -4,7 +4,6 @@
     <title>Admin Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -15,7 +14,6 @@
             height: 100vh;
             background-color: #f0f2f5;
         }
-
         .container {
             background-color: white;
             padding: 20px;
@@ -24,31 +22,25 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
-            box-sizing: border-box;
         }
-
         .logo {
-            width: 150px;
+            width: 150px; /* Increased size */
             margin-bottom: 20px;
         }
-
         h2 {
             margin-top: 0;
             color: #333;
         }
-
         .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-
-        input[type="email"], input[type="password"], input[type="text"], textarea, select {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -56,8 +48,7 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
-
-        input[type="submit"], input[type="button"] {
+        input[type="button"] {
             width: 100%;
             padding: 10px;
             background-color: #4CAF50;
@@ -67,46 +58,51 @@
             font-size: 16px;
             cursor: pointer;
         }
-
-        input[type="submit"]:hover, input[type="button"]:hover {
+        input[type="button"]:hover {
             background-color: #45a049;
         }
-
         .error {
             color: red;
             display: none;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-                max-width: 100%;
-            }
-
-            .logo {
-                width: 120px;
-            }
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-          apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
-          authDomain: "attendance-24135.firebaseapp.com",
-          projectId: "attendance-24135",
-          storageBucket: "attendance-24135.appspot.com",
-          messagingSenderId: "296971423576",
-          appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
-          measurementId: "G-W6WMML8PDP"
-      };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
+            authDomain: "attendance-24135.firebaseapp.com",
+            projectId: "attendance-24135",
+            storageBucket: "attendance-24135.appspot.com",
+            messagingSenderId: "296971423576",
+            appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
+            measurementId: "G-W6WMML8PDP"
+        };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function adminLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            db.collection('admins').doc(username).get().then((doc) => {
+                if (doc.exists && doc.data().password === password) {
+                    sessionStorage.setItem('loggedInAdmin', username);
+                    document.getElementById('error').style.display = 'none';
+                    window.location.href = 'admin.html';
+                } else {
+                    document.getElementById('error').style.display = 'block';
+                }
+            }).catch((error) => {
+                console.error("Error getting document: ", error);
+                document.getElementById('error').style.display = 'block';
+            });
+        }
     </script>
 </head>
 <body>
@@ -114,28 +110,15 @@
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Admin Login</h2>
         <div class="form-group">
-            <label for="adminEmail">Email:</label>
-            <input type="email" id="adminEmail">
+            <label for="username">Username:</label>
+            <input type="text" id="username">
         </div>
         <div class="form-group">
-            <label for="adminPassword">Password:</label>
-            <input type="password" id="adminPassword">
+            <label for="password">Password:</label>
+            <input type="password" id="password">
         </div>
         <input type="button" value="Login" onclick="adminLogin()">
+        <div id="error" class="error">Invalid username or password</div>
     </div>
-    <script>
-        function adminLogin() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    sessionStorage.setItem('loggedInAdmin', userCredential.user.email);
-                    window.location.href = 'admin.html';
-                })
-                .catch((error) => {
-                    alert(error.message);
-                });
-        }
-    </script>
 </body>
 </html>
