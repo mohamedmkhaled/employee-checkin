@@ -4,6 +4,7 @@
     <title>Employee Check-In</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -14,6 +15,7 @@
             height: 100vh;
             background-color: #f0f2f5;
         }
+
         .container {
             background-color: white;
             padding: 20px;
@@ -22,25 +24,31 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
+            box-sizing: border-box;
         }
+
         .logo {
             width: 150px;
             margin-bottom: 20px;
         }
+
         h2 {
             margin-top: 0;
             color: #333;
         }
+
         .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], select {
+
+        input[type="text"], input[type="password"], input[type="email"], textarea, select {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -48,7 +56,8 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
-        input[type="submit"] {
+
+        input[type="submit"], input[type="button"] {
             width: 100%;
             padding: 10px;
             background-color: #4CAF50;
@@ -58,15 +67,77 @@
             font-size: 16px;
             cursor: pointer;
         }
-        input[type="submit"]:hover {
+
+        input[type="submit"]:hover, input[type="button"]:hover {
             background-color: #45a049;
         }
+
         .error {
             color: red;
             display: none;
         }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .logo {
+                width: 120px;
+            }
+        }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+          apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
+          authDomain: "attendance-24135.firebaseapp.com",
+          projectId: "attendance-24135",
+          storageBucket: "attendance-24135.appspot.com",
+          messagingSenderId: "296971423576",
+          appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
+          measurementId: "G-W6WMML8PDP"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
+        <h2>Employee Check-In</h2>
+        <form id="checkinForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" readonly>
+                <span id="name-error" class="error">Please select your name.</span>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" readonly>
+                <span id="location-error" class="error">Location is required.</span>
+            </div>
+            <input type="button" value="Submit" onclick="submitCheckIn()">
+        </form>
+    </div>
+
+    <script>
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('name').value = user.email;
+                getLocation();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -103,14 +174,7 @@
         }
 
         function validateForm() {
-            var name = document.getElementById("name").value;
             var location = document.getElementById("location").value;
-            if (name === "") {
-                document.getElementById("name-error").style.display = "block";
-                return false;
-            } else {
-                document.getElementById("name-error").style.display = "none";
-            }
             if (location === "" || location === "Geolocation is not supported by this browser.") {
                 document.getElementById("location-error").style.display = "block";
                 return false;
@@ -120,53 +184,22 @@
             return true;
         }
 
-        function handleSubmit() {
+        function submitCheckIn() {
             if (validateForm()) {
-                setTimeout(function() {
-                    window.location.href = "thank_you.html";
-                }, 1000); // 1 second delay before redirecting
+                const user = auth.currentUser;
+                const location = document.getElementById("location").value;
+                db.collection('checkins').add({
+                    email: user.email,
+                    location,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    alert('Check-in successful');
+                    window.location.href = 'thank_you.html';
+                }).catch((error) => {
+                    alert('Error: ' + error.message);
+                });
             }
-        }
-
-        function checkLogin() {
-            const user = sessionStorage.getItem('loggedInUser');
-            if (!user) {
-                window.location.href = 'index.html';
-            } else {
-                document.getElementById('name').value = user;
-            }
-        }
-
-        window.onload = function() {
-            getLocation();
-            checkLogin();
         }
     </script>
-</head>
-<body>
-    <div class="container">
-        <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
-        <h2>Employee Check-In</h2>
-        <form action="https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse" method="POST" target="hidden_iframe" onsubmit="handleSubmit()">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="entry.662451888" readonly required>
-                <span id="name-error" class="error">Please select your name.</span>
-            </div>
-            <div class="form-group">
-                <label for="check">Check-in/Check-out:</label>
-                <select id="check" name="entry.988086970" required>
-                    <option value="Check-in">Check-in</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="entry.1727974634" readonly required>
-                <span id="location-error" class="error">Location is required.</span>
-            </div>
-            <input type="submit" value="Submit">
-        </form>
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-    </div>
 </body>
 </html>
