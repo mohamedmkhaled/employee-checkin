@@ -1,30 +1,10 @@
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
-<script>
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-  apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
-  authDomain: "attendance-24135.firebaseapp.com",
-  projectId: "attendance-24135",
-  storageBucket: "attendance-24135.appspot.com",
-  messagingSenderId: "296971423576",
-  appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
-  measurementId: "G-W6WMML8PDP"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-</script>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Admin - Manage Users</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -35,6 +15,7 @@
             height: 100vh;
             background-color: #f0f2f5;
         }
+
         .container {
             background-color: white;
             padding: 20px;
@@ -43,25 +24,31 @@
             width: 100%;
             max-width: 600px;
             text-align: center;
+            box-sizing: border-box;
         }
+
         .logo {
             width: 150px;
             margin-bottom: 20px;
         }
+
         h2 {
             margin-top: 0;
             color: #333;
         }
+
         .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="password"] {
+
+        input[type="text"], input[type="password"], textarea, select {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -69,7 +56,8 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
-        input[type="button"] {
+
+        input[type="submit"], input[type="button"] {
             width: 100%;
             padding: 10px;
             background-color: #4CAF50;
@@ -78,188 +66,106 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
-        input[type="button"]:hover {
+
+        input[type="submit"]:hover, input[type="button"]:hover {
             background-color: #45a049;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #f4f4f4;
         }
-        .actions {
-            display: flex;
-            justify-content: space-around;
-        }
-        button {
-            padding: 5px 10px;
+
+        .btn {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
             border: none;
             border-radius: 4px;
+            color: white;
+            font-size: 16px;
             cursor: pointer;
         }
-        .edit-btn {
-            background-color: #FFA500;
-            color: white;
-            transition: background-color 0.3s ease;
+
+        .check-in-btn {
+            background-color: #4CAF50;
         }
-        .edit-btn:hover {
-            background-color: #FF8C00;
-        }
-        .delete-btn {
-            background-color: #FF6347;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        .delete-btn:hover {
+
+        .check-out-btn {
             background-color: #FF4500;
         }
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+
+        .sick-leave-btn {
+            background-color: #FFA500;
         }
-        .nav-buttons button {
-            padding: 10px 20px;
-            background-color: #007BFF;
+
+        .emergency-leave-btn {
+            background-color: #FF6347;
+        }
+
+        .vacation-btn {
+            background-color: #1E90FF;
+        }
+
+        .upload-btn {
+            padding: 5px 10px;
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
-        .nav-buttons button:hover {
-            background-color: #0056b3;
+
+        .upload-btn:hover {
+            background-color: #45a049;
         }
-        .welcome {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: default;
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .logo {
+                width: 120px;
+            }
         }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
-        let users = JSON.parse(localStorage.getItem('users')) || [
-            { username: 'Sayed Eid', password: 'password1' },
-            { username: 'Mina Ayman', password: 'password2' }
-        ];
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+          apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
+          authDomain: "attendance-24135.firebaseapp.com",
+          projectId: "attendance-24135",
+          storageBucket: "attendance-24135.appspot.com",
+          messagingSenderId: "296971423576",
+          appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
+          measurementId: "G-W6WMML8PDP"
+      };
 
-        let admins = JSON.parse(localStorage.getItem('admins')) || [];
-
-        function saveUsers() {
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        function saveAdmins() {
-            localStorage.setItem('admins', JSON.stringify(admins));
-        }
-
-        function displayUsers() {
-            const table = document.getElementById('userTable');
-            table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
-            users.forEach((user, index) => {
-                table.innerHTML += `
-                    <tr>
-                        <td>${user.username}</td>
-                        <td>${user.password}</td>
-                        <td class="actions">
-                            <button class="edit-btn" onclick="editUser(${index})">Edit</button>
-                            <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function addUser() {
-            const username = document.getElementById('newUsername').value;
-            const password = document.getElementById('newPassword').value;
-            if (username && password) {
-                if (users.some(user => user.username === username) || admins.some(admin => admin.username === username)) {
-                    alert('Username already exists. Please choose a different username.');
-                    return;
-                }
-                users.push({ username, password });
-                saveUsers();
-                displayUsers();
-                document.getElementById('newUsername').value = '';
-                document.getElementById('newPassword').value = '';
-            } else {
-                alert('Please fill out both fields');
-            }
-        }
-
-        function editUser(index) {
-            const newUsername = prompt('Enter new username:', users[index].username);
-            const newPassword = prompt('Enter new password:', users[index].password);
-            if (newUsername && newPassword) {
-                if (users.some((user, i) => user.username === newUsername && i !== index) || admins.some(admin => admin.username === newUsername)) {
-                    alert('Username already exists. Please choose a different username.');
-                    return;
-                }
-                users[index].username = newUsername;
-                users[index].password = newPassword;
-                saveUsers();
-                displayUsers();
-            }
-        }
-
-        function deleteUser(index) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                users.splice(index, 1);
-                saveUsers();
-                displayUsers();
-            }
-        }
-
-        function checkAdminLogin() {
-            const admin = sessionStorage.getItem('loggedInAdmin');
-            if (!admin) {
-                window.location.href = 'admin_login.html';
-            } else {
-                document.getElementById('welcomeMessage').textContent = `Welcome, ${admin}`;
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('loggedInAdmin');
-            window.location.href = 'admin_login.html';
-        }
-
-        function sessionTimeout() {
-            setTimeout(function() {
-                logout();
-            }, 60000); // 1 minute timeout
-        }
-
-        window.onload = function() {
-            checkAdminLogin();
-            displayUsers();
-            sessionTimeout();
-
-            // Invalidate session on tab close or refresh
-            window.addEventListener('beforeunload', function() {
-                sessionStorage.removeItem('loggedInAdmin');
-            });
-        }
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
     </script>
 </head>
 <body>
     <div class="container">
-        <div class="nav-buttons">
-            <button class="welcome" id="welcomeMessage"></button>
-            <button onclick="window.location.href='index.html'">Employee Login</button>
-        </div>
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Admin - Manage Users</h2>
         <div class="form-group">
@@ -271,7 +177,88 @@
             <input type="password" id="newPassword">
         </div>
         <input type="button" value="Add User" onclick="addUser()">
-        <table id="userTable"></table>
+        <h3>Users</h3>
+        <table id="userTable">
+            <tr>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+        </table>
+        <input type="button" value="Logout" onclick="logout()">
     </div>
+    <script>
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = 'admin_login.html';
+            } else {
+                loadUsers();
+            }
+        });
+
+        function loadUsers() {
+            const table = document.getElementById('userTable');
+            table.innerHTML = `
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            `;
+            db.collection('users').get().then((snapshot) => {
+                snapshot.forEach((doc) => {
+                    const user = doc.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.password}</td>
+                        <td>
+                            <button onclick="editUser('${doc.id}')">Edit</button>
+                            <button onclick="deleteUser('${doc.id}')">Delete</button>
+                        </td>
+                    `;
+                    table.appendChild(row);
+                });
+            });
+        }
+
+        function addUser() {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            if (username && password) {
+                db.collection('users').add({
+                    username,
+                    password
+                }).then(() => {
+                    loadUsers();
+                });
+            } else {
+                alert('Please enter a username and password.');
+            }
+        }
+
+        function editUser(id) {
+            const newPassword = prompt('Enter new password:');
+            if (newPassword) {
+                db.collection('users').doc(id).update({
+                    password: newPassword
+                }).then(() => {
+                    loadUsers();
+                });
+            }
+        }
+
+        function deleteUser(id) {
+            db.collection('users').doc(id).delete().then(() => {
+                loadUsers();
+            });
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = 'admin_login.html';
+            });
+        }
+    </script>
 </body>
 </html>
