@@ -136,33 +136,34 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
-
-        let admins = [];
 
         function fetchAdmins() {
             db.collection('admins').get().then((querySnapshot) => {
-                admins = querySnapshot.docs.map(doc => doc.data());
-                displayAdmins();
+                let admins = [];
+                querySnapshot.forEach((doc) => {
+                    admins.push(doc.data());
+                });
+                displayAdmins(admins);
             });
         }
 
         function saveAdmin(admin) {
-            db.collection('admins').doc(admin.username).set(admin);
+            return db.collection('admins').doc(admin.username).set(admin);
         }
 
         function deleteAdminFromDB(username) {
-            db.collection('admins').doc(username).delete();
+            return db.collection('admins').doc(username).delete();
         }
 
-        function displayAdmins() {
+        function displayAdmins(admins) {
             const table = document.getElementById('adminTable');
-            table.innerHTML = '<tr><th>Username</th><th>Actions</th></tr>';
+            table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
             admins.forEach((admin, index) => {
                 table.innerHTML += `
                     <tr>
                         <td>${admin.username}</td>
+                        <td>${admin.password}</td>
                         <td class="actions">
                             <button class="edit-btn" onclick="editAdmin(${index})">Edit</button>
                             <button class="delete-btn" onclick="deleteAdmin(${index})">Delete</button>
@@ -176,42 +177,49 @@
             const username = document.getElementById('newUsername').value;
             const password = document.getElementById('newPassword').value;
             if (username && password) {
-                if (admins.some(admin => admin.username === username)) {
-                    alert('Username already exists. Please choose a different username.');
-                    return;
-                }
-                const admin = { username, password };
-                admins.push(admin);
-                saveAdmin(admin);
-                displayAdmins();
-                document.getElementById('newUsername').value = '';
-                document.getElementById('newPassword').value = '';
+                db.collection('admins').doc(username).get().then((doc) => {
+                    if (doc.exists) {
+                        alert('Username already exists. Please choose a different username.');
+                    } else {
+                        const admin = { username, password };
+                        saveAdmin(admin).then(() => {
+                            fetchAdmins();
+                            document.getElementById('newUsername').value = '';
+                            document.getElementById('newPassword').value = '';
+                        });
+                    }
+                });
             } else {
                 alert('Please fill out both fields');
             }
         }
 
         function editAdmin(index) {
-            const newUsername = prompt('Enter new username:', admins[index].username);
-            const newPassword = prompt('Enter new password:', admins[index].password);
+            const username = document.getElementById('adminTable').rows[index + 1].cells[0].innerText;
+            const newUsername = prompt('Enter new username:', username);
+            const newPassword = prompt('Enter new password:', document.getElementById('adminTable').rows[index + 1].cells[1].innerText);
+
             if (newUsername && newPassword) {
-                if (admins.some((admin, i) => admin.username === newUsername && i !== index)) {
-                    alert('Username already exists. Please choose a different username.');
-                    return;
-                }
-                const admin = { username: newUsername, password: newPassword };
-                admins[index] = admin;
-                saveAdmin(admin);
-                displayAdmins();
+                db.collection('admins').doc(username).get().then((doc) => {
+                    if (doc.exists && doc.id !== newUsername) {
+                        alert('Username already exists. Please choose a different username.');
+                    } else {
+                        deleteAdminFromDB(username).then(() => {
+                            saveAdmin({ username: newUsername, password: newPassword }).then(() => {
+                                fetchAdmins();
+                            });
+                        });
+                    }
+                });
             }
         }
 
         function deleteAdmin(index) {
+            const username = document.getElementById('adminTable').rows[index + 1].cells[0].innerText;
             if (confirm('Are you sure you want to delete this admin?')) {
-                const username = admins[index].username;
-                admins.splice(index, 1);
-                deleteAdminFromDB(username);
-                displayAdmins();
+                deleteAdminFromDB(username).then(() => {
+                    fetchAdmins();
+                });
             }
         }
 
