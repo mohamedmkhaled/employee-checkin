@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Employee Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
@@ -20,7 +20,7 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 600px;
             text-align: center;
         }
         .logo {
@@ -31,50 +31,103 @@
             margin-top: 0;
             color: #333;
         }
-        .welcome-message {
-            margin-bottom: 20px;
-            color: #666;
-        }
-        input[type="button"] {
+        table {
             width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
             padding: 10px;
-            background-color: #4CAF50;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .upload-btn, .leave-btn {
+            padding: 5px 10px;
             border: none;
             border-radius: 4px;
             color: white;
-            font-size: 16px;
             cursor: pointer;
             margin-bottom: 10px;
-            transition: background-color 0.3s ease;
+            width: 100%;
         }
-        input[type="button"]:hover {
+        .upload-btn {
+            background-color: #4CAF50;
+        }
+        .upload-btn:hover {
             background-color: #45a049;
         }
+        .sick-leave {
+            background-color: #FFA500;
+        }
+        .sick-leave:hover {
+            background-color: #FF8C00;
+        }
+        .emergency-leave {
+            background-color: #FF6347;
+        }
+        .emergency-leave:hover {
+            background-color: #FF4500;
+        }
+        .vacation {
+            background-color: #1E90FF;
+        }
+        .vacation:hover {
+            background-color: #1C86EE;
+        }
     </style>
-    <script>
-        function redirectTo(page) {
-            window.location.href = page;
-        }
-
-        function checkLogin() {
-            const user = sessionStorage.getItem('loggedInUser');
-            if (!user) {
-                window.location.href = 'index.html';
-            } else {
-                document.getElementById('username').innerText = user;
-            }
-        }
-
-        window.onload = checkLogin;
-    </script>
 </head>
 <body>
     <div class="container">
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
-        <h2>Dashboard</h2>
-        <p class="welcome-message">Welcome, <span id="username"></span></p>
-        <input type="button" value="Check-In" onclick="redirectTo('check_in.html')">
-        <input type="button" value="Check-Out" onclick="redirectTo('check_out.html')">
+        <h2>Employee Dashboard</h2>
+        <h3>Leave Records</h3>
+        <table id="leaveTable">
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Reason</th>
+                <th>Upload Document</th>
+            </tr>
+        </table>
+        <button class="leave-btn sick-leave" onclick="location.href='sick_leave.html'">Sick Leave</button>
+        <button class="leave-btn emergency-leave" onclick="location.href='emergency_leave.html'">Emergency Leave</button>
+        <button class="leave-btn vacation" onclick="location.href='vacation.html'">Vacation</button>
+        <script>
+            async function fetchLeaves() {
+                const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL');
+                const leaves = await response.json();
+                const table = document.getElementById('leaveTable');
+                leaves.forEach(leave => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${leave.Date}</td>
+                        <td>${leave.Type}</td>
+                        <td>${leave.Reason}</td>
+                        <td><button class="upload-btn" onclick="uploadDocument('${leave.Date}')">Upload</button></td>
+                    `;
+                    table.appendChild(row);
+                });
+            }
+
+            function uploadDocument(date) {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*,application/pdf';
+                fileInput.onchange = () => {
+                    const file = fileInput.files[0];
+                    if (file) {
+                        // Handle file upload (e.g., send to Google Drive and update the Google Sheet)
+                        alert(`Uploaded document for ${date}`);
+                    }
+                };
+                fileInput.click();
+            }
+
+            window.onload = fetchLeaves;
+        </script>
     </div>
 </body>
 </html>
