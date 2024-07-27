@@ -24,7 +24,7 @@
             text-align: center;
         }
         .logo {
-            width: 100px;
+            width: 150px;
             margin-bottom: 20px;
         }
         h2 {
@@ -57,6 +57,7 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         input[type="button"]:hover {
             background-color: #45a049;
@@ -87,6 +88,7 @@
         .edit-btn {
             background-color: #FFA500;
             color: white;
+            transition: background-color 0.3s ease;
         }
         .edit-btn:hover {
             background-color: #FF8C00;
@@ -94,104 +96,172 @@
         .delete-btn {
             background-color: #FF6347;
             color: white;
+            transition: background-color 0.3s ease;
         }
         .delete-btn:hover {
             background-color: #FF4500;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .nav-buttons button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .nav-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .welcome {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: default;
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
-      // Your web app's Firebase configuration
-  const firebaseConfig = {
-  apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
-  authDomain: "attendance-24135.firebaseapp.com",
-  projectId: "attendance-24135",
-  storageBucket: "attendance-24135.appspot.com",
-  messagingSenderId: "296971423576",
-  appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
-  measurementId: "G-W6WMML8PDP"
-      };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
+            authDomain: "attendance-24135.firebaseapp.com",
+            projectId: "attendance-24135",
+            storageBucket: "attendance-24135.appspot.com",
+            messagingSenderId: "296971423576",
+            appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
+            measurementId: "G-W6WMML8PDP"
+        };
 
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-      let users = [];
+        let users = [];
 
-      function saveUsers() {
-          users.forEach(user => {
-              db.collection('users').doc(user.username).set(user);
-          });
-      }
+        function fetchUsers() {
+            db.collection('users').get().then((querySnapshot) => {
+                users = querySnapshot.docs.map(doc => doc.data());
+                displayUsers();
+            });
+        }
 
-      function displayUsers() {
-          const table = document.getElementById('userTable');
-          table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
-          users.forEach((user, index) => {
-              table.innerHTML += `
-                  <tr>
-                      <td>${user.username}</td>
-                      <td>${user.password}</td>
-                      <td class="actions">
-                          <button class="edit-btn" onclick="editUser(${index})">Edit</button>
-                          <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
-                      </td>
-                  </tr>
-              `;
-          });
-      }
+        function saveUser(user) {
+            db.collection('users').doc(user.username).set(user);
+        }
 
-      function addUser() {
-          const username = document.getElementById('newUsername').value;
-          const password = document.getElementById('newPassword').value;
-          if (username && password) {
-              users.push({ username, password });
-              saveUsers();
-              displayUsers();
-              document.getElementById('newUsername').value = '';
-              document.getElementById('newPassword').value = '';
-          } else {
-              alert('Please fill out both fields');
-          }
-      }
+        function deleteUserFromDB(username) {
+            db.collection('users').doc(username).delete();
+        }
 
-      function editUser(index) {
-          const newUsername = prompt('Enter new username:', users[index].username);
-          const newPassword = prompt('Enter new password:', users[index].password);
-          if (newUsername && newPassword) {
-              users[index].username = newUsername;
-              users[index].password = newPassword;
-              saveUsers();
-              displayUsers();
-          }
-      }
+        function displayUsers() {
+            const table = document.getElementById('userTable');
+            table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
+            users.forEach((user, index) => {
+                table.innerHTML += `
+                    <tr>
+                        <td>${user.username}</td>
+                        <td>${user.password}</td>
+                        <td class="actions">
+                            <button class="edit-btn" onclick="editUser(${index})">Edit</button>
+                            <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
 
-      function deleteUser(index) {
-          if (confirm('Are you sure you want to delete this user?')) {
-              db.collection('users').doc(users[index].username).delete().then(() => {
-                  users.splice(index, 1);
-                  displayUsers();
-              }).catch((error) => {
-                  alert('Error: ' + error.message);
-              });
-          }
-      }
+        function addUser() {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            if (username && password) {
+                if (users.some(user => user.username === username)) {
+                    alert('Username already exists. Please choose a different username.');
+                    return;
+                }
+                const user = { username, password };
+                users.push(user);
+                saveUser(user);
+                displayUsers();
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newPassword').value = '';
+            } else {
+                alert('Please fill out both fields');
+            }
+        }
 
-      window.onload = function() {
-          db.collection('users').get().then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                  users.push(doc.data());
-              });
-              displayUsers();
-          });
-      }
+        function editUser(index) {
+            const newUsername = prompt('Enter new username:', users[index].username);
+            const newPassword = prompt('Enter new password:', users[index].password);
+            if (newUsername && newPassword) {
+                if (users.some((user, i) => user.username === newUsername && i !== index)) {
+                    alert('Username already exists. Please choose a different username.');
+                    return;
+                }
+                const user = { username: newUsername, password: newPassword };
+                users[index] = user;
+                saveUser(user);
+                displayUsers();
+            }
+        }
+
+        function deleteUser(index) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                const username = users[index].username;
+                users.splice(index, 1);
+                deleteUserFromDB(username);
+                displayUsers();
+            }
+        }
+
+        function checkAdminLogin() {
+            const admin = sessionStorage.getItem('loggedInAdmin');
+            if (!admin) {
+                window.location.href = 'admin_login.html';
+            } else {
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${admin}`;
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('loggedInAdmin');
+            window.location.href = 'admin_login.html';
+        }
+
+        function sessionTimeout() {
+            setTimeout(function() {
+                logout();
+            }, 60000); // 1 minute timeout
+        }
+
+        window.onload = function() {
+            checkAdminLogin();
+            fetchUsers();
+            sessionTimeout();
+
+            // Invalidate session on tab close or refresh
+            window.addEventListener('beforeunload', function() {
+                sessionStorage.removeItem('loggedInAdmin');
+            });
+        }
     </script>
 </head>
 <body>
     <div class="container">
+        <div class="nav-buttons">
+            <button class="welcome" id="welcomeMessage"></button>
+            <button onclick="window.location.href='index.html'">Employee Login</button>
+        </div>
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Admin - Manage Users</h2>
         <div class="form-group">
