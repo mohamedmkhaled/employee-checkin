@@ -145,15 +145,25 @@
                     admins.push(doc.data());
                 });
                 displayAdmins(admins);
+            }).catch((error) => {
+                console.error("Error fetching admins: ", error);
             });
         }
 
         function saveAdmin(admin) {
-            return db.collection('admins').doc(admin.username).set(admin);
+            return db.collection('admins').doc(admin.username).set(admin).then(() => {
+                console.log("Admin saved successfully");
+            }).catch((error) => {
+                console.error("Error saving admin: ", error);
+            });
         }
 
         function deleteAdminFromDB(username) {
-            return db.collection('admins').doc(username).delete();
+            return db.collection('admins').doc(username).delete().then(() => {
+                console.log("Admin deleted successfully");
+            }).catch((error) => {
+                console.error("Error deleting admin: ", error);
+            });
         }
 
         function displayAdmins(admins) {
@@ -188,6 +198,8 @@
                             document.getElementById('newPassword').value = '';
                         });
                     }
+                }).catch((error) => {
+                    console.error("Error checking admin existence: ", error);
                 });
             } else {
                 alert('Please fill out both fields');
@@ -210,6 +222,8 @@
                             });
                         });
                     }
+                }).catch((error) => {
+                    console.error("Error editing admin: ", error);
                 });
             }
         }
