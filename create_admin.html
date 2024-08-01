@@ -40,7 +40,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        input[type="text"], input[type="password"], input[type="email"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -119,121 +119,54 @@
             background-color: #0056b3;
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
-            authDomain: "attendance-24135.firebaseapp.com",
-            projectId: "attendance-24135",
-            storageBucket: "attendance-24135.appspot.com",
-            messagingSenderId: "296971423576",
-            appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
-            measurementId: "G-W6WMML8PDP"
-        };
+        const webAppUrl = 'YOUR_WEB_APP_URL';
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        async function addAdmin() {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            
+            if (!username || !password) {
+                alert('Please fill out both fields');
+                return;
+            }
 
-        function fetchAdmins() {
-            db.collection('admins').get().then((querySnapshot) => {
-                let admins = [];
-                querySnapshot.forEach((doc) => {
-                    admins.push(doc.data());
-                });
-                displayAdmins(admins);
-            }).catch((error) => {
-                console.error("Error fetching admins: ", error);
-            });
+            const response = await fetch(`${webAppUrl}?action=addAdmin&username=${username}&password=${password}`);
+            const result = await response.text();
+            alert(result);
+            fetchAdmins();
         }
 
-        function saveAdmin(admin) {
-            return db.collection('admins').doc(admin.username).set(admin).then(() => {
-                console.log("Admin saved successfully");
-            }).catch((error) => {
-                console.error("Error saving admin: ", error);
-            });
-        }
-
-        function deleteAdminFromDB(username) {
-            return db.collection('admins').doc(username).delete().then(() => {
-                console.log("Admin deleted successfully");
-            }).catch((error) => {
-                console.error("Error deleting admin: ", error);
-            });
-        }
-
-        function displayAdmins(admins) {
+        async function fetchAdmins() {
+            const response = await fetch(`${webAppUrl}?action=getAdmins`);
+            const data = await response.json();
             const table = document.getElementById('adminTable');
             table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
-            admins.forEach((admin, index) => {
+            data.forEach((row, index) => {
                 table.innerHTML += `
                     <tr>
-                        <td>${admin.username}</td>
-                        <td>${admin.password}</td>
+                        <td>${row[0]}</td>
+                        <td>${row[1]}</td>
                         <td class="actions">
-                            <button class="edit-btn" onclick="editAdmin(${index})">Edit</button>
-                            <button class="delete-btn" onclick="deleteAdmin(${index})">Delete</button>
+                            <button class="edit-btn" onclick="editAdmin(${index}, '${row[0]}', '${row[1]}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteAdmin(${index}, '${row[0]}')">Delete</button>
                         </td>
                     </tr>
                 `;
             });
         }
 
-        function addAdmin() {
-            const username = document.getElementById('newUsername').value;
-            const password = document.getElementById('newPassword').value;
-            if (username && password) {
-                db.collection('admins').doc(username).get().then((doc) => {
-                    if (doc.exists) {
-                        alert('Username already exists. Please choose a different username.');
-                    } else {
-                        const admin = { username, password };
-                        saveAdmin(admin).then(() => {
-                            fetchAdmins();
-                            document.getElementById('newUsername').value = '';
-                            document.getElementById('newPassword').value = '';
-                        });
-                    }
-                }).catch((error) => {
-                    console.error("Error checking admin existence: ", error);
-                });
-            } else {
-                alert('Please fill out both fields');
-            }
-        }
-
-        function editAdmin(index) {
-            const username = document.getElementById('adminTable').rows[index + 1].cells[0].innerText;
+        function editAdmin(index, username, password) {
             const newUsername = prompt('Enter new username:', username);
-            const newPassword = prompt('Enter new password:', document.getElementById('adminTable').rows[index + 1].cells[1].innerText);
-
+            const newPassword = prompt('Enter new password:', password);
             if (newUsername && newPassword) {
-                db.collection('admins').doc(username).get().then((doc) => {
-                    if (doc.exists && doc.id !== newUsername) {
-                        alert('Username already exists. Please choose a different username.');
-                    } else {
-                        deleteAdminFromDB(username).then(() => {
-                            saveAdmin({ username: newUsername, password: newPassword }).then(() => {
-                                fetchAdmins();
-                            });
-                        });
-                    }
-                }).catch((error) => {
-                    console.error("Error editing admin: ", error);
-                });
+                // Update Google Sheets with new values
             }
         }
 
-        function deleteAdmin(index) {
-            const username = document.getElementById('adminTable').rows[index + 1].cells[0].innerText;
+        function deleteAdmin(index, username) {
             if (confirm('Are you sure you want to delete this admin?')) {
-                deleteAdminFromDB(username).then(() => {
-                    fetchAdmins();
-                });
+                // Delete row from Google Sheets
             }
         }
 
