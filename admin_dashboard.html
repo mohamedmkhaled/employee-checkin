@@ -35,13 +35,21 @@
             const username = document.getElementById('employee-username').value;
             const password = document.getElementById('employee-password').value;
 
-            db.collection('employees').add({
-                username: username,
-                password: password
-            }).then(() => {
-                loadEmployees();
-                document.getElementById('employee-username').value = '';
-                document.getElementById('employee-password').value = '';
+            db.collection('employees').where('username', '==', username).get().then(querySnapshot => {
+                if (!querySnapshot.empty) {
+                    alert('An employee with this username already exists.');
+                } else {
+                    db.collection('employees').add({
+                        username: username,
+                        password: password
+                    }).then(() => {
+                        loadEmployees();
+                        document.getElementById('employee-username').value = '';
+                        document.getElementById('employee-password').value = '';
+                    }).catch(error => {
+                        alert('Error: ' + error.message);
+                    });
+                }
             }).catch(error => {
                 alert('Error: ' + error.message);
             });
