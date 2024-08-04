@@ -10,8 +10,8 @@
     <script>
         var firebaseConfig = {
             apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
-            authDomain: "attendance-system-d9e82.firebaseapp.com",   
-            databaseURL:"https://attendance-system-d9e82-default-rtdb.firebaseio.com",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",
+            databaseURL: "https://attendance-system-d9e82-default-rtdb.firebaseio.com",
             projectId: "attendance-system-d9e82",
             storageBucket: "attendance-system-d9e82.appspot.com",
             messagingSenderId: "1016633980751",
@@ -43,9 +43,14 @@
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Employee Dashboard</h2>
         <p class="welcome-message">Welcome, <span id="username"></span></p>
-        <input type="button" value="Check-In" onclick="window.location.href='check_in.html'">
-        <input type="button" value="Check-Out" onclick="window.location.href='check_out.html'">
-        <input type="button" value="Logout" onclick="logout()">
+        <button onclick="window.location.href='check_in.html'" class="btn btn-primary btn-block">Check-In</button>
+        <button onclick="window.location.href='check_out.html'" class="btn btn-primary btn-block">Check-Out</button>
+        <button onclick="window.location.href='sick_leave.html'" class="btn btn-primary btn-block">Sick Leave</button>
+        <button onclick="window.location.href='emergency_leave.html'" class="btn btn-primary btn-block">Emergency Leave</button>
+        <button onclick="window.location.href='halfday_leave.html'" class="btn btn-primary btn-block">Half-day Leave</button>
+        <button onclick="window.location.href='remote_checkin.html'" class="btn btn-primary btn-block">Remote Check-In</button>
+        <button onclick="window.location.href='remote_checkout.html'" class="btn btn-primary btn-block">Remote Check-Out</button>
+        <button onclick="logout()" class="btn btn-danger btn-block mt-3">Logout</button>
     </div>
 </body>
 </html>
