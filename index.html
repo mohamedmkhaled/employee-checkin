@@ -66,40 +66,30 @@
             display: none;
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
     <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAe2M1_gHWTtCqimRWBGOkg1SPE2ISczKs",
-            authDomain: "attendance-24135.firebaseapp.com",
-            projectId: "attendance-24135",
-            storageBucket: "attendance-24135.appspot.com",
-            messagingSenderId: "296971423576",
-            appId: "1:296971423576:web:275c896dc20c91f32e1f2d",
-            measurementId: "G-W6WMML8PDP"
-        };
+        const personalAccessToken = 'YOUR_PERSONAL_ACCESS_TOKEN';
+        const baseId = 'YOUR_BASE_ID';
+        const tableName = 'Employees';
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        function login() {
+        async function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            auth.signInWithEmailAndPassword(username, password)
-                .then((userCredential) => {
-                    // Signed in
-                    sessionStorage.setItem('loggedInUser', username);
-                    document.getElementById('error').style.display = 'none';
-                    window.location.href = 'dashboard.html';
-                })
-                .catch((error) => {
-                    document.getElementById('error').style.display = 'block';
-                });
+            const url = `https://api.airtable.com/v0/${baseId}/${tableName}?filterByFormula=AND({Username}="${username}", {Password}="${password}")`;
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${personalAccessToken}`
+                }
+            });
+            const data = await response.json();
+
+            if (data.records.length > 0) {
+                sessionStorage.setItem('loggedInUser', username);
+                document.getElementById('error').style.display = 'none';
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
         }
     </script>
 </head>
