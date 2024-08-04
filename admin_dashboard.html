@@ -10,8 +10,8 @@
     <script>
         var firebaseConfig = {
             apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
-            authDomain: "attendance-system-d9e82.firebaseapp.com",   
-            databaseURL:"https://attendance-system-d9e82-default-rtdb.firebaseio.com",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",
+            databaseURL: "https://attendance-system-d9e82-default-rtdb.firebaseio.com",
             projectId: "attendance-system-d9e82",
             storageBucket: "attendance-system-d9e82.appspot.com",
             messagingSenderId: "1016633980751",
@@ -21,43 +21,50 @@
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
 
-        function addUser() {
-            const username = document.getElementById('employeeUsername').value;
-            const password = document.getElementById('employeePassword').value;
-            if (username && password) {
-                db.collection('employees').add({
-                    username: username,
-                    password: password,
-                    role: 'employee'
-                }).then(() => {
-                    alert('Employee added successfully!');
-                    document.getElementById('employeeUsername').value = '';
-                    document.getElementById('employeePassword').value = '';
-                    displayEmployees();
-                }).catch(error => {
-                    alert('Error: ' + error.message);
-                });
+        function checkLogin() {
+            const user = sessionStorage.getItem('loggedInUser');
+            if (!user || sessionStorage.getItem('role') !== 'admin') {
+                window.location.href = 'index.html';
             } else {
-                alert('Please fill out both fields');
+                document.getElementById('username').innerText = user;
+                loadEmployees();
             }
         }
 
-        function displayEmployees() {
+        function addEmployee() {
+            const username = document.getElementById('employee-username').value;
+            const password = document.getElementById('employee-password').value;
+
+            db.collection('employees').add({
+                username: username,
+                password: password
+            }).then(() => {
+                loadEmployees();
+                document.getElementById('employee-username').value = '';
+                document.getElementById('employee-password').value = '';
+            }).catch(error => {
+                alert('Error: ' + error.message);
+            });
+        }
+
+        function loadEmployees() {
             db.collection('employees').get().then(querySnapshot => {
-                const table = document.getElementById('employeeTable');
-                table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
+                const employeesList = document.getElementById('employees-list');
+                employeesList.innerHTML = '';
                 querySnapshot.forEach(doc => {
                     const employee = doc.data();
-                    table.innerHTML += `
-                        <tr>
-                            <td>${employee.username}</td>
-                            <td>${employee.password}</td>
-                            <td>
-                                <button onclick="editEmployee('${doc.id}', '${employee.username}', '${employee.password}')">Edit</button>
-                                <button onclick="removeEmployee('${doc.id}')">Remove</button>
-                            </td>
-                        </tr>
-                    `;
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+                    listItem.innerHTML = `
+                        <div class="row">
+                            <div class="col-4">${employee.username}</div>
+                            <div class="col-4">${employee.password}</div>
+                            <div class="col-4">
+                                <button class="btn btn-warning btn-sm" onclick="editEmployee('${doc.id}', '${employee.username}', '${employee.password}')">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="removeEmployee('${doc.id}')">Remove</button>
+                            </div>
+                        </div>`;
+                    employeesList.appendChild(listItem);
                 });
             });
         }
@@ -65,13 +72,12 @@
         function editEmployee(id, username, password) {
             const newUsername = prompt("Enter new username:", username);
             const newPassword = prompt("Enter new password:", password);
-            if (newUsername !== null && newPassword !== null) {
+            if (newUsername && newPassword) {
                 db.collection('employees').doc(id).update({
                     username: newUsername,
                     password: newPassword
                 }).then(() => {
-                    alert('Employee updated successfully!');
-                    displayEmployees();
+                    loadEmployees();
                 }).catch(error => {
                     alert('Error: ' + error.message);
                 });
@@ -81,21 +87,10 @@
         function removeEmployee(id) {
             if (confirm("Are you sure you want to remove this employee?")) {
                 db.collection('employees').doc(id).delete().then(() => {
-                    alert('Employee removed successfully!');
-                    displayEmployees();
+                    loadEmployees();
                 }).catch(error => {
                     alert('Error: ' + error.message);
                 });
-            }
-        }
-
-        function checkLogin() {
-            const user = sessionStorage.getItem('loggedInUser');
-            const role = sessionStorage.getItem('role');
-            if (!user || role !== 'admin') {
-                window.location.href = 'index.html';
-            } else {
-                document.getElementById('username').innerText = user;
             }
         }
 
@@ -104,10 +99,7 @@
             window.location.href = 'index.html';
         }
 
-        window.onload = function() {
-            checkLogin();
-            displayEmployees();
-        }
+        window.onload = checkLogin;
     </script>
 </head>
 <body>
@@ -116,17 +108,17 @@
         <h2>Admin Dashboard</h2>
         <p class="welcome-message">Welcome, <span id="username"></span></p>
         <div class="form-group">
-            <label for="employeeUsername">Employee Username:</label>
-            <input type="text" id="employeeUsername">
+            <label for="employee-username">Employee Username:</label>
+            <input type="text" id="employee-username" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="employeePassword">Employee Password:</label>
-            <input type="password" id="employeePassword">
+            <label for="employee-password">Employee Password:</label>
+            <input type="password" id="employee-password" class="form-control" required>
         </div>
-        <input type="button" value="Add Employee" onclick="addUser()">
-        <table id="employeeTable"></table>
-        <button onclick="logout()" class="btn btn-danger">Logout</button>
-        <button onclick="window.location.href='index.html'" class="btn btn-primary">Home</button>
+        <button onclick="addEmployee()" class="btn btn-primary btn-block">Add Employee</button>
+        <ul id="employees-list" class="list-group mt-3"></ul>
+        <button onclick="logout()" class="btn btn-danger btn-block mt-3">Logout</button>
+        <button onclick="window.location.href='index.html'" class="btn btn-secondary btn-block mt-3">Home</button>
     </div>
 </body>
 </html>
