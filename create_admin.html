@@ -96,10 +96,6 @@
 
         window.onload = function() {
             loadAdmins();
-            const user = sessionStorage.getItem('loggedInUser');
-            if (!user || sessionStorage.getItem('role') !== 'superadmin') {
-                window.location.href = 'index.html';
-            }
         }
     </script>
 </head>
