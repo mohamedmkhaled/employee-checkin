@@ -49,22 +49,19 @@
 
         function loadEmployees() {
             db.collection('employees').get().then(querySnapshot => {
-                const employeesList = document.getElementById('employees-list');
-                employeesList.innerHTML = '';
+                const employeesTable = document.getElementById('employees-table-body');
+                employeesTable.innerHTML = '';
                 querySnapshot.forEach(doc => {
                     const employee = doc.data();
-                    const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item';
-                    listItem.innerHTML = `
-                        <div class="row">
-                            <div class="col-4">${employee.username}</div>
-                            <div class="col-4">${employee.password}</div>
-                            <div class="col-4">
-                                <button class="btn btn-warning btn-sm" onclick="editEmployee('${doc.id}', '${employee.username}', '${employee.password}')">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="removeEmployee('${doc.id}')">Remove</button>
-                            </div>
-                        </div>`;
-                    employeesList.appendChild(listItem);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${employee.username}</td>
+                        <td>${employee.password}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editEmployee('${doc.id}', '${employee.username}', '${employee.password}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="removeEmployee('${doc.id}')">Remove</button>
+                        </td>`;
+                    employeesTable.appendChild(row);
                 });
             });
         }
@@ -116,7 +113,16 @@
             <input type="password" id="employee-password" class="form-control" required>
         </div>
         <button onclick="addEmployee()" class="btn btn-primary">Add Employee</button>
-        <ul id="employees-list" class="list-group mt-3"></ul>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="employees-table-body"></tbody>
+        </table>
         <button onclick="logout()" class="btn btn-danger mt-3">Logout</button>
         <button onclick="window.location.href='index.html'" class="btn btn-secondary mt-3">Home</button>
     </div>
