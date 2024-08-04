@@ -62,23 +62,20 @@
             var leaveReason = document.getElementById("leave_reason").value;
             if (name === "") {
                 document.getElementById("name-error").style.display = "block";
-                return false;
             } else {
                 document.getElementById("name-error").style.display = "none";
             }
             if (location === "" || location === "Geolocation is not supported by this browser.") {
                 document.getElementById("location-error").style.display = "block";
-                return false;
             } else {
                 document.getElementById("location-error").style.display = "none";
             }
             if (leaveReason === "") {
                 document.getElementById("leave_reason-error").style.display = "block";
-                return false;
             } else {
                 document.getElementById("leave_reason-error").style.display = "none";
             }
-            return true;
+            return name !== "" && location !== "" && leaveReason !== "" && location !== "Geolocation is not supported by this browser.";
         }
 
         function handleSubmit() {
@@ -162,7 +159,7 @@
             </div>
             <div class="form-group">
                 <label for="leave_reason">Leave Reason:</label>
-                <input type="text" id="leave_reason" value="Sick Leave" readonly required>
+                <input type="text" id="leave_reason" required>
                 <span id="leave_reason-error" class="error">Please provide a reason for your leave.</span>
             </div>
             <div class="form-group">
@@ -172,6 +169,7 @@
             </div>
             <input type="submit" value="Submit" class="btn btn-primary btn-block">
         </form>
+        <button onclick="window.location.href='employee_dashboard.html'" class="btn btn-secondary btn-block mt-3">Back</button>
     </div>
     <iframe name="hidden_iframe" style="display:none;"></iframe>
 </body>
