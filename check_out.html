@@ -61,17 +61,15 @@
             var location = document.getElementById("location").value;
             if (name === "") {
                 document.getElementById("name-error").style.display = "block";
-                return false;
             } else {
                 document.getElementById("name-error").style.display = "none";
             }
             if (location === "" || location === "Geolocation is not supported by this browser.") {
                 document.getElementById("location-error").style.display = "block";
-                return false;
             } else {
                 document.getElementById("location-error").style.display = "none";
             }
-            return true;
+            return name !== "" && location !== "" && location !== "Geolocation is not supported by this browser.";
         }
 
         function handleSubmit() {
@@ -153,8 +151,9 @@
                 <input type="text" id="location" readonly required>
                 <span id="location-error" class="error">Location is required.</span>
             </div>
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="btn btn-primary btn-block">
         </form>
+        <button onclick="window.location.href='employee_dashboard.html'" class="btn btn-secondary btn-block mt-3">Back</button>
     </div>
     <iframe name="hidden_iframe" style="display:none;"></iframe>
 </body>
