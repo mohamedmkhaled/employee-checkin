@@ -23,11 +23,13 @@
 
         function handleSubmit() {
             const username = sessionStorage.getItem('loggedInUser');
+            const location = document.getElementById('location').value;
             const leaveReason = document.getElementById('leave_reason').value;
 
             db.collection('leaves').add({
                 username: username,
                 type: 'Sick Leave',
+                location: location,
                 leaveReason: leaveReason,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
@@ -47,6 +49,12 @@
                 checkOutField.name = 'entry.988086970';
                 checkOutField.value = 'Sick Leave';
                 form.appendChild(checkOutField);
+
+                const locationField = document.createElement('input');
+                locationField.type = 'hidden';
+                locationField.name = 'entry.1727974634';
+                locationField.value = location;
+                form.appendChild(locationField);
 
                 const leaveReasonField = document.createElement('input');
                 leaveReasonField.type = 'hidden';
@@ -83,6 +91,10 @@
         <h2>Sick Leave</h2>
         <p class="welcome-message">Welcome, <span id="username"></span></p>
         <form onsubmit="handleSubmit(); return false;">
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" class="form-control" required>
+            </div>
             <div class="form-group">
                 <label for="leave_reason">Leave Reason:</label>
                 <input type="text" id="leave_reason" class="form-control" required>
