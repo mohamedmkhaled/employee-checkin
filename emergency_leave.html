@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Leave</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",
+            databaseURL: "https://attendance-system-d9e82-default-rtdb.firebaseio.com",
+            projectId: "attendance-system-d9e82",
+            storageBucket: "attendance-system-d9e82.appspot.com",
+            messagingSenderId: "1016633980751",
+            appId: "1:1016633980751:web:cbf390f5400ffae0c1773a",
+            measurementId: "G-49EXS27L8M"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        function handleSubmit() {
+            const username = sessionStorage.getItem('loggedInUser');
+            const leaveReason = document.getElementById('leave_reason').value;
+
+            db.collection('leaves').add({
+                username: username,
+                type: 'Emergency Leave',
+                leaveReason: leaveReason,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                const form = document.createElement('form');
+                form.action = 'https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse';
+                form.method = 'POST';
+                form.target = 'hidden_iframe';
+
+                const nameField = document.createElement('input');
+                nameField.type = 'hidden';
+                nameField.name = 'entry.662451888';
+                nameField.value = username;
+                form.appendChild(nameField);
+
+                const checkOutField = document.createElement('input');
+                checkOutField.type = 'hidden';
+                checkOutField.name = 'entry.988086970';
+                checkOutField.value = 'Emergency Leave';
+                form.appendChild(checkOutField);
+
+                const leaveReasonField = document.createElement('input');
+                leaveReasonField.type = 'hidden';
+                leaveReasonField.name = 'entry.984414081';
+                leaveReasonField.value = leaveReason;
+                form.appendChild(leaveReasonField);
+
+                document.body.appendChild(form);
+                form.submit();
+
+                setTimeout(function() {
+                    window.location.href = "thank_you.html";
+                }, 1000); // 1 second delay before redirecting
+            }).catch(error => {
+                alert('Error: ' + error.message);
+            });
+        }
+
+        function checkLogin() {
+            const user = sessionStorage.getItem('loggedInUser');
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('username').innerText = user;
+            }
+        }
+
+        window.onload = checkLogin;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
+        <h2>Emergency Leave</h2>
+        <p class="welcome-message">Welcome, <span id="username"></span></p>
+        <form onsubmit="handleSubmit(); return false;">
+            <div class="form-group">
+                <label for="leave_reason">Leave Reason:</label>
+                <input type="text" id="leave_reason" class="form-control" required>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary btn-block">
+        </form>
+        <button onclick="window.location.href='index.html'" class="btn btn-secondary btn-block mt-3">Home</button>
+    </div>
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
+</body>
+</html>
