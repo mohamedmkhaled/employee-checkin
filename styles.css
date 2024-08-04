@@ -41,7 +41,7 @@ label {
     font-weight: bold;
 }
 
-input[type="text"], input[type="password"], .form-control {
+input[type="text"], input[type="password"], select {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -71,10 +71,12 @@ input[type="submit"], .btn {
 
 .btn-warning {
     background-color: #ffc107;
+    color: #fff;
 }
 
 .btn-warning:hover {
     background-color: #e0a800;
+    color: #fff;
 }
 
 .btn-danger {
