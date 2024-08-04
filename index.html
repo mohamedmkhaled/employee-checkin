@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",   
+            databaseURL:"https://attendance-system-d9e82-default-rtdb.firebaseio.com",
+            projectId: "attendance-system-d9e82",
+            storageBucket: "attendance-system-d9e82.appspot.com",
+            messagingSenderId: "1016633980751",
+            appId: "1:1016633980751:web:cbf390f5400ffae0c1773a",
+            measurementId: "G-49EXS27L8M"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const collection = role === 'admin' ? 'admins' : 'employees';
+
+            db.collection(collection).where('username', '==', username).get().then(querySnapshot => {
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach(doc => {
+                        const user = doc.data();
+                        if (user.password === password) {
+                            sessionStorage.setItem('loggedInUser', username);
+                            sessionStorage.setItem('role', role);
+                            const redirectUrl = role === 'admin' ? 'admin_dashboard.html' : 'employee_dashboard.html';
+                            window.location.href = redirectUrl;
+                        } else {
+                            document.getElementById('error').style.display = 'block';
+                        }
+                    });
+                } else {
+                    document.getElementById('error').style.display = 'block';
+                }
+            });
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select id="role" class="form-control">
+                <option value="employee">Employee</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" onclick="login()">Login</button>
+        <div id="error" class="text-danger mt-2" style="display:none;">Invalid username or password</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",   
+            databaseURL:"https://attendance-system-d9e82-default-rtdb.firebaseio.com",
+            projectId: "attendance-system-d9e82",
+            storageBucket: "attendance-system-d9e82.appspot.com",
+            messagingSenderId: "1016633980751",
+            appId: "1:1016633980751:web:cbf390f5400ffae0c1773a",
+            measurementId: "G-49EXS27L8M"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        function addUser() {
+            const username = document.getElementById('employeeUsername').value;
+            const password = document.getElementById('employeePassword').value;
+            if (username && password) {
+                db.collection('employees').add({
+                    username: username,
+                    password: password,
+                    role: 'employee'
+                }).then(() => {
+                    alert('Employee added successfully!');
+                    document.getElementById('employeeUsername').value = '';
+                    document.getElementById('employeePassword').value = '';
+                    displayEmployees();
+                }).catch(error => {
+                    alert('Error: ' + error.message);
+                });
+            } else {
+                alert('Please fill out both fields');
+            }
+        }
+
+        function displayEmployees() {
+            db.collection('employees').get().then(querySnapshot => {
+                const table = document.getElementById('employeeTable');
+                table.innerHTML = '<tr><th>Username</th><th>Password</th><th>Actions</th></tr>';
+                querySnapshot.forEach(doc => {
+                    const employee = doc.data();
+                    table.innerHTML += `
+                        <tr>
+                            <td>${employee.username}</td>
+                            <td>${employee.password}</td>
+                            <td>
+                                <button onclick="editEmployee('${doc.id}', '${employee.username}', '${employee.password}')">Edit</button>
+                                <button onclick="removeEmployee('${doc.id}')">Remove</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        function editEmployee(id, username, password) {
+            const newUsername = prompt("Enter new username:", username);
+            const newPassword = prompt("Enter new password:", password);
+            if (newUsername !== null && newPassword !== null) {
+                db.collection('employees').doc(id).update({
+                    username: newUsername,
+                    password: newPassword
+                }).then(() => {
+                    alert('Employee updated successfully!');
+                    displayEmployees();
+                }).catch(error => {
+                    alert('Error: ' + error.message);
+                });
+            }
+        }
+
+        function removeEmployee(id) {
+            if (confirm("Are you sure you want to remove this employee?")) {
+                db.collection('employees').doc(id).delete().then(() => {
+                    alert('Employee removed successfully!');
+                    displayEmployees();
+                }).catch(error => {
+                    alert('Error: ' + error.message);
+                });
+            }
+        }
+
+        function checkLogin() {
+            const user = sessionStorage.getItem('loggedInUser');
+            const role = sessionStorage.getItem('role');
+            if (!user || role !== 'admin') {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('username').innerText = user;
+            }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        window.onload = function() {
+            checkLogin();
+            displayEmployees();
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
+        <h2>Admin Dashboard</h2>
+        <p class="welcome-message">Welcome, <span id="username"></span></p>
+        <div class="form-group">
+            <label for="employeeUsername">Employee Username:</label>
+            <input type="text" id="employeeUsername">
+        </div>
+        <div class="form-group">
+            <label for="employeePassword">Employee Password:</label>
+            <input type="password" id="employeePassword">
+        </div>
+        <input type="button" value="Add Employee" onclick="addUser()">
+        <table id="employeeTable"></table>
+        <button onclick="logout()" class="btn btn-danger">Logout</button>
+        <button onclick="window.location.href='index.html'" class="btn btn-primary">Home</button>
+    </div>
+</body>
+</html>
