@@ -10,7 +10,7 @@
     <script>
         var firebaseConfig = {
             apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
-            authDomain: "attendance-system-d9e82.firebaseapp.com",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",   
             databaseURL: "https://attendance-system-d9e82-default-rtdb.firebaseio.com",
             projectId: "attendance-system-d9e82",
             storageBucket: "attendance-system-d9e82.appspot.com",
@@ -26,31 +26,38 @@
             if (!user) {
                 window.location.href = 'index.html';
             } else {
-                document.getElementById('username').innerText = user;
+                document.getElementById('welcome').innerText = "Welcome, " + user;
             }
         }
 
         function logout() {
-            sessionStorage.clear();
+            sessionStorage.removeItem('loggedInUser');
             window.location.href = 'index.html';
         }
 
-        window.onload = checkLogin;
+        window.onload = function() {
+            checkLogin();
+        }
     </script>
 </head>
 <body>
     <div class="container">
         <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
         <h2>Employee Dashboard</h2>
-        <p class="welcome-message">Welcome, <span id="username"></span></p>
+        <p id="welcome"></p>
         <button onclick="window.location.href='check_in.html'" class="btn btn-primary btn-block">Check-In</button>
         <button onclick="window.location.href='check_out.html'" class="btn btn-primary btn-block">Check-Out</button>
         <button onclick="window.location.href='sick_leave.html'" class="btn btn-primary btn-block">Sick Leave</button>
         <button onclick="window.location.href='emergency_leave.html'" class="btn btn-primary btn-block">Emergency Leave</button>
         <button onclick="window.location.href='halfday_leave.html'" class="btn btn-primary btn-block">Half-day Leave</button>
+        <button onclick="window.location.href='vacation.html'" class="btn btn-primary btn-block">Vacation</button>
         <button onclick="window.location.href='remote_checkin.html'" class="btn btn-primary btn-block">Remote Check-In</button>
         <button onclick="window.location.href='remote_checkout.html'" class="btn btn-primary btn-block">Remote Check-Out</button>
-        <button onclick="logout()" class="btn btn-danger btn-block mt-3">Logout</button>
+        <button onclick="window.location.href='procurement_checkin.html'" class="btn btn-primary btn-block">Procurement Check-In</button>
+        <button onclick="window.location.href='procurement_checkout.html'" class="btn btn-primary btn-block">Procurement Check-Out</button>
+        <button onclick="window.location.href='site_checkin.html'" class="btn btn-primary btn-block">Site Check-In</button>
+        <button onclick="window.location.href='site_checkout.html'" class="btn btn-primary btn-block">Site Check-Out</button>
+        <button onclick="logout()" class="btn btn-secondary btn-block">Logout</button>
     </div>
 </body>
 </html>
