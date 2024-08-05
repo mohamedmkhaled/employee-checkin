@@ -160,16 +160,11 @@
         }
     </script>
     <style>
-        .radio-container {
-            display: table;
+        .radio-container table {
             width: 100%;
         }
-        .radio-container div {
-            display: table-cell;
-            padding-right: 20px;
-        }
-        .radio-container label {
-            margin-right: 10px;
+        .radio-container td {
+            padding: 5px;
         }
     </style>
 </head>
@@ -196,18 +191,20 @@
             <div class="form-group">
                 <label for="site_type">Site Type:</label>
                 <div class="radio-container">
-                    <div>
-                        <input type="radio" id="maintenance" name="site_type" value="Maintenance" required>
-                        <label for="maintenance">Maintenance</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required>
-                        <label for="emergency_maintenance">Emergency Maintenance</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="new_installation" name="site_type" value="New Installation" required>
-                        <label for="new_installation">New Installation</label>
-                    </div>
+                    <table>
+                        <tr>
+                            <td><input type="radio" id="maintenance" name="site_type" value="Maintenance" required></td>
+                            <td><label for="maintenance">Maintenance</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required></td>
+                            <td><label for="emergency_maintenance">Emergency Maintenance</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" id="new_installation" name="site_type" value="New Installation" required></td>
+                            <td><label for="new_installation">New Installation</label></td>
+                        </tr>
+                    </table>
                 </div>
                 <span id="site_type-error" class="error">Site type is required.</span>
             </div>
