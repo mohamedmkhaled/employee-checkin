@@ -162,9 +162,18 @@
     <style>
         .radio-container table {
             width: 100%;
+            border-collapse: collapse;
         }
-        .radio-container td {
-            padding: 5px;
+        .radio-container th, .radio-container td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .radio-container th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #f2f2f2;
+            color: black;
         }
     </style>
 </head>
@@ -193,16 +202,16 @@
                 <div class="radio-container">
                     <table>
                         <tr>
-                            <td><input type="radio" id="maintenance" name="site_type" value="Maintenance" required></td>
-                            <td><label for="maintenance">Maintenance</label></td>
+                            <th>Type</th>
                         </tr>
                         <tr>
-                            <td><input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required></td>
-                            <td><label for="emergency_maintenance">Emergency Maintenance</label></td>
+                            <td><input type="radio" id="maintenance" name="site_type" value="Maintenance" required> <label for="maintenance">Maintenance</label></td>
                         </tr>
                         <tr>
-                            <td><input type="radio" id="new_installation" name="site_type" value="New Installation" required></td>
-                            <td><label for="new_installation">New Installation</label></td>
+                            <td><input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required> <label for="emergency_maintenance">Emergency Maintenance</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" id="new_installation" name="site_type" value="New Installation" required> <label for="new_installation">New Installation</label></td>
                         </tr>
                     </table>
                 </div>
