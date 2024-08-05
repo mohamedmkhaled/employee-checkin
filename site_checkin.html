@@ -129,7 +129,7 @@
 
                     const siteTypeField = document.createElement('input');
                     siteTypeField.type = 'hidden';
-                    siteTypeField.name = 'entry.1893200501';
+                    siteTypeField.name = 'entry.613215876';
                     siteTypeField.value = siteType;
                     form.appendChild(siteTypeField);
 
@@ -159,6 +159,16 @@
             checkLogin();
         }
     </script>
+    <style>
+        .radio-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .radio-container label {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -182,22 +192,20 @@
             </div>
             <div class="form-group">
                 <label for="site_type">Site Type:</label>
-                <table>
-                    <tr>
-                        <td>
-                            <input type="radio" id="maintenance" name="site_type" value="Maintenance" required>
-                            <label for="maintenance">Maintenance</label>
-                        </td>
-                        <td>
-                            <input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required>
-                            <label for="emergency_maintenance">Emergency Maintenance</label>
-                        </td>
-                        <td>
-                            <input type="radio" id="new_installation" name="site_type" value="New Installation" required>
-                            <label for="new_installation">New Installation</label>
-                        </td>
-                    </tr>
-                </table>
+                <div class="radio-container">
+                    <div>
+                        <input type="radio" id="maintenance" name="site_type" value="Maintenance" required>
+                        <label for="maintenance">Maintenance</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required>
+                        <label for="emergency_maintenance">Emergency Maintenance</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="new_installation" name="site_type" value="New Installation" required>
+                        <label for="new_installation">New Installation</label>
+                    </div>
+                </div>
                 <span id="site_type-error" class="error">Site type is required.</span>
             </div>
             <input type="submit" value="Submit" class="btn btn-primary btn-block">
