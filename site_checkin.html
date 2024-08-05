@@ -60,7 +60,7 @@
             var name = document.getElementById("name").value;
             var location = document.getElementById("location").value;
             var siteLocation = document.getElementById("site_location").value;
-            var siteType = document.getElementById("site_type").value;
+            var siteType = document.querySelector('input[name="site_type"]:checked');
             if (name === "") {
                 document.getElementById("name-error").style.display = "block";
             } else {
@@ -76,12 +76,12 @@
             } else {
                 document.getElementById("site_location-error").style.display = "none";
             }
-            if (siteType === "") {
+            if (!siteType) {
                 document.getElementById("site_type-error").style.display = "block";
             } else {
                 document.getElementById("site_type-error").style.display = "none";
             }
-            return name !== "" && location !== "" && siteLocation !== "" && siteType !== "" && location !== "Geolocation is not supported by this browser.";
+            return name !== "" && location !== "" && siteLocation !== "" && siteType !== null && location !== "Geolocation is not supported by this browser.";
         }
 
         function handleSubmit() {
@@ -89,7 +89,7 @@
                 const username = document.getElementById('name').value;
                 const location = document.getElementById('location').value;
                 const siteLocation = document.getElementById('site_location').value;
-                const siteType = document.getElementById('site_type').value;
+                const siteType = document.querySelector('input[name="site_type"]:checked').value;
 
                 db.collection('site_checkins').add({
                     username: username,
@@ -182,7 +182,18 @@
             </div>
             <div class="form-group">
                 <label for="site_type">Site Type:</label>
-                <input type="text" id="site_type" required>
+                <div>
+                    <input type="radio" id="maintenance" name="site_type" value="Maintenance" required>
+                    <label for="maintenance">Maintenance</label>
+                </div>
+                <div>
+                    <input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required>
+                    <label for="emergency_maintenance">Emergency Maintenance</label>
+                </div>
+                <div>
+                    <input type="radio" id="new_installation" name="site_type" value="New Installation" required>
+                    <label for="new_installation">New Installation</label>
+                </div>
                 <span id="site_type-error" class="error">Site type is required.</span>
             </div>
             <input type="submit" value="Submit" class="btn btn-primary btn-block">
