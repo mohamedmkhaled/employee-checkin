@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vacation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAuknFiV42CT-PDYtp57bmclyKEZnP0kMU",
+            authDomain: "attendance-system-d9e82.firebaseapp.com",   
+            databaseURL: "https://attendance-system-d9e82-default-rtdb.firebaseio.com",
+            projectId: "attendance-system-d9e82",
+            storageBucket: "attendance-system-d9e82.appspot.com",
+            messagingSenderId: "1016633980751",
+            appId: "1:1016633980751:web:cbf390f5400ffae0c1773a",
+            measurementId: "G-49EXS27L8M"
+        };
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById("location").value = "Geolocation is not supported by this browser.";
+                document.getElementById("location-error").style.display = "block";
+            }
+        }
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var googleMapsLink = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+            document.getElementById("location").value = googleMapsLink;
+            document.getElementById("location-error").style.display = "none";
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation. Please enable location services.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+            document.getElementById("location-error").style.display = "block";
+        }
+
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var location = document.getElementById("location").value;
+            var leaveReason = document.getElementById("leave_reason").value;
+            if (name === "") {
+                document.getElementById("name-error").style.display = "block";
+            } else {
+                document.getElementById("name-error").style.display = "none";
+            }
+            if (location === "" || location === "Geolocation is not supported by this browser.") {
+                document.getElementById("location-error").style.display = "block";
+            } else {
+                document.getElementById("location-error").style.display = "none";
+            }
+            if (leaveReason === "") {
+                document.getElementById("leave_reason-error").style.display = "block";
+            } else {
+                document.getElementById("leave_reason-error").style.display = "none";
+            }
+            return name !== "" && location !== "" && leaveReason !== "" && location !== "Geolocation is not supported by this browser.";
+        }
+
+        function handleSubmit() {
+            if (validateForm()) {
+                const username = document.getElementById('name').value;
+                const location = document.getElementById('location').value;
+                const leaveReason = document.getElementById('leave_reason').value;
+
+                db.collection('vacations').add({
+                    username: username,
+                    location: location,
+                    leaveReason: leaveReason,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    const form = document.createElement('form');
+                    form.action = 'https://docs.google.com/forms/d/e/1FAIpQLSenbnpVQfAw36La8WOxGhl-yoaGOAkPnCc0QTIoXNcpf8nT3w/formResponse';
+                    form.method = 'POST';
+                    form.target = 'hidden_iframe';
+
+                    const nameField = document.createElement('input');
+                    nameField.type = 'hidden';
+                    nameField.name = 'entry.662451888';
+                    nameField.value = username;
+                    form.appendChild(nameField);
+
+                    const vacationField = document.createElement('input');
+                    vacationField.type = 'hidden';
+                    vacationField.name = 'entry.988086970';
+                    vacationField.value = 'Vacation';
+                    form.appendChild(vacationField);
+
+                    const locationField = document.createElement('input');
+                    locationField.type = 'hidden';
+                    locationField.name = 'entry.1727974634';
+                    locationField.value = location;
+                    form.appendChild(locationField);
+
+                    const leaveReasonField = document.createElement('input');
+                    leaveReasonField.type = 'hidden';
+                    leaveReasonField.name = 'entry.984414081';
+                    leaveReasonField.value = leaveReason;
+                    form.appendChild(leaveReasonField);
+
+                    document.body.appendChild(form);
+                    form.submit();
+
+                    setTimeout(function() {
+                        window.location.href = "thank_you.html";
+                    }, 1000); // 1 second delay before redirecting
+                }).catch(error => {
+                    alert('Error: ' + error.message);
+                });
+            }
+        }
+
+        function checkLogin() {
+            const user = sessionStorage.getItem('loggedInUser');
+            if (!user) {
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('name').value = user;
+            }
+        }
+
+        window.onload = function() {
+            getLocation();
+            checkLogin();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="NN2%20Full%20copy%202@4x.png" alt="Noornation Logo" class="logo">
+        <h2>Vacation</h2>
+        <form onsubmit="handleSubmit(); return false;">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" readonly required>
+                <span id="name-error" class="error">Please select your name.</span>
+            </div>
+            <div class="form-group">
+                <label for="leave_reason">Leave Reason:</label>
+                <input type="text" id="leave_reason" required>
+                <span id="leave_reason-error" class="error">Please provide a reason for your leave.</span>
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" readonly required>
+                <span id="location-error" class="error">Location is required.</span>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary btn-block">
+        </form>
+        <button onclick="window.location.href='employee_dashboard.html'" class="btn btn-secondary btn-block mt-3">Back</button>
+    </div>
+    <iframe name="hidden_iframe" style="display:none;"></iframe>
+</body>
+</html>
