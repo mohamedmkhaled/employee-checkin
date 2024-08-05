@@ -161,9 +161,12 @@
     </script>
     <style>
         .radio-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            display: table;
+            width: 100%;
+        }
+        .radio-container div {
+            display: table-cell;
+            padding-right: 20px;
         }
         .radio-container label {
             margin-right: 10px;
@@ -212,6 +215,4 @@
         </form>
         <button onclick="window.location.href='employee_dashboard.html'" class="btn btn-secondary btn-block mt-3">Back</button>
     </div>
-    <iframe name="hidden_iframe" style="display:none;"></iframe>
-</body>
-</html>
+    <iframe name="hidden_iframe"
