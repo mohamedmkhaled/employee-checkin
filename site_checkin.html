@@ -123,7 +123,7 @@
 
                     const siteLocationField = document.createElement('input');
                     siteLocationField.type = 'hidden';
-                    siteLocationField.name = 'entry.1049132405';
+                    siteLocationField.name = 'entry.974676559';
                     siteLocationField.value = siteLocation;
                     form.appendChild(siteLocationField);
 
@@ -182,18 +182,22 @@
             </div>
             <div class="form-group">
                 <label for="site_type">Site Type:</label>
-                <div>
-                    <input type="radio" id="maintenance" name="site_type" value="Maintenance" required>
-                    <label for="maintenance">Maintenance</label>
-                </div>
-                <div>
-                    <input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required>
-                    <label for="emergency_maintenance">Emergency Maintenance</label>
-                </div>
-                <div>
-                    <input type="radio" id="new_installation" name="site_type" value="New Installation" required>
-                    <label for="new_installation">New Installation</label>
-                </div>
+                <table>
+                    <tr>
+                        <td>
+                            <input type="radio" id="maintenance" name="site_type" value="Maintenance" required>
+                            <label for="maintenance">Maintenance</label>
+                        </td>
+                        <td>
+                            <input type="radio" id="emergency_maintenance" name="site_type" value="Emergency Maintenance" required>
+                            <label for="emergency_maintenance">Emergency Maintenance</label>
+                        </td>
+                        <td>
+                            <input type="radio" id="new_installation" name="site_type" value="New Installation" required>
+                            <label for="new_installation">New Installation</label>
+                        </td>
+                    </tr>
+                </table>
                 <span id="site_type-error" class="error">Site type is required.</span>
             </div>
             <input type="submit" value="Submit" class="btn btn-primary btn-block">
