@@ -34,7 +34,20 @@
             sessionStorage.removeItem('loggedInUser');
             window.location.href = 'index.html';
         }
-
+        
+        function startLogoutTimer() {
+            let timer;
+            const resetTimer = () => {
+                clearTimeout(timer);
+                timer = setTimeout(logout, 60000); // 1 minute
+            };
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+            document.onclick = resetTimer;
+            document.onscroll = resetTimer;
+        }
+        
         window.onload = function() {
             checkLogin();
         }
