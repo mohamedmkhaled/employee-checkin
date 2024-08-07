@@ -48,18 +48,9 @@
             document.onclick = resetTimer;
             document.onscroll = resetTimer;
         }
-
-        function setupInactivityTimer() {
-        let time;
-        window.onload = resetTimer;
-        document.onmousemove = resetTimer;
-        document.onkeypress = resetTimer;
-        document.onscroll = resetTimer;
-        document.ontouchstart = resetTimer;
         
         window.onload = function() {
             checkLogin();
-            setupInactivityTimer();
         }
     </script>
 </head>
